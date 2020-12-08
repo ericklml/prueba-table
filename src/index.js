@@ -1,12 +1,27 @@
 import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
-import { Table } from 'antd';
+import { Table, Button } from 'antd';
 import { Boton } from './Boton';
 import 'antd/dist/antd.css';
+const MONTHS = {
+  'Ene': 1,
+  'Feb': 2,
+  'Mar': 3,
+  'Abr': 4,
+  'May': 5,
+  'Jun': 6,
+  'Jul': 7,
+  'Ago': 8,
+  'Sep': 9,
+  'Oct': 10,
+  'Nov': 11,
+  'Dic': 12,
+}
 
 function TreeData() {
 
   const [state, setState] = useState({});
+  const [rows, setRows] = useState([]);
 
   const columns = [
     {
@@ -33,25 +48,25 @@ function TreeData() {
       title: 'Mar',
       dataIndex: 'Mar',
       key: 'Mar',
-      render: (value, records) => <Boton value={value} setState={setState} state={state} month={'Mar'} id={records.key}/>
+      render: (value, records) => <Boton value={value} setState={setState} state={state} month={'Mar'} id={records.key} />
     },
     {
       title: 'Abr',
       dataIndex: 'Abr',
       key: 'Abr',
-      render: (value, records) => <Boton value={value} setState={setState} state={state} month={'Abr'} id={records.key}/>
+      render: (value, records) => <Boton value={value} setState={setState} state={state} month={'Abr'} id={records.key} />
     },
     {
       title: 'May',
       dataIndex: 'May',
       key: 'May',
-      render: (value, records) => <Boton value={value} setState={setState} state={state} month={'May'} id={records.key}/>
+      render: (value, records) => <Boton value={value} setState={setState} state={state} month={'May'} id={records.key} />
     },
     {
       title: 'Jun',
       dataIndex: 'Jun',
       key: 'Jun',
-      render: (value, records) => <Boton value={value} setState={setState} state={state} month={'Jun'} id={records.key}/>
+      render: (value, records) => <Boton value={value} setState={setState} state={state} month={'Jun'} id={records.key} />
     },
     {
       title: 'Total',
@@ -167,10 +182,29 @@ function TreeData() {
     },
   ];
 
+  const sendPlan = () => {
+    let newArray = [];
+    rows.map((x, index) => {
+      Object.keys(x).map(y => {
+        if (y in MONTHS) {
+          if (state[x.key] !== true) {
+            if (y in state[x.key]) {
+              newArray[index] = { ...newArray[index], [y]: state[x.key][y] };
+            }
+          }
+        }
+        else {
+          newArray[index] = { ...newArray[index], [y]: x[y] };
+        }
+      });
+    });
+  }
+
   // rowSelection objects indicates the need for row selection
   const rowSelection = {
     onSelect: (record, selected, selectedRows) => {
-      console.log(record, selected, selectedRows);
+      console.log(selectedRows);
+      setRows(selectedRows);
       let temp = {};
       selectedRows.map(row => {
         temp[row.key] = true;
@@ -187,6 +221,7 @@ function TreeData() {
         rowSelection={{ ...rowSelection, checkStrictly: false }}
         dataSource={data}
       />
+      <Button type='primary' onClick={sendPlan}>Mostrar state</Button>
     </>
   );
 }

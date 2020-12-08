@@ -13,11 +13,15 @@ export const Boton = ({value, id, month, setState, state}) => {
         }
         else{
             delete state[id][month]
-            setState(state);
             setTipo('default');
-            console.log(state);
-            Object.keys(state[id]).length === 0 && setState({...state, [id]:true});
+            console.log(state[id]);
+            if(Object.keys(state[id]).length === 0){
+                state[id] = true;
+                setState((state));
+            }
+            console.log(state[id]);
         }
+        console.log(state);
     }
 
     return (
